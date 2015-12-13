@@ -52,7 +52,7 @@ create key: id_rsa_moz12$ cd ~/.ssh$ ssh-keygen -t rsa -C &quot;pisc@mo2zie.me&q
     <header>
       
         <div class="icon"></div>
-        <time datetime="2015-09-05T04:35:42.000Z"><a href="/2015/09/05/ssh-key/">2015-09-05 12:35:42</a></time>
+        <time datetime="2015-09-05T04:35:42.000Z"><a href="/2015/09/05/ssh-key/">2015-09-05</a></time>
       
       
   
@@ -65,7 +65,7 @@ create key: id_rsa_moz12$ cd ~/.ssh$ ssh-keygen -t rsa -C &quot;pisc@mo2zie.me&q
         <p>有时我们需要同时在github, gitlab等多个代码托管平台工作又不想使用相同的ssh key，那么就需要根据不同的host来配置。</p>
 <h3 id="create_key:_id_rsa_moz">create key: id_rsa_moz</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~/.ssh</span><br><span class="line">$ ssh-keygen -t rsa -C <span class="string">"pisc@mo2zie.me"</span></span><br></pre></td></tr></table></figure>
 <p>在输入文件名称时注意与已有的区分</p>
-<h3 id="添加的ssh_agent让ssh识别新的私钥">添加的ssh agent让ssh识别新的私钥</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-add ~/.ssh/id_rsa_moz</span><br></pre></td></tr></table></figure>
+<h3 id="添加到ssh_agent让ssh识别新的私钥">添加到ssh agent让ssh识别新的私钥</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-add ~/.ssh/id_rsa_github</span><br></pre></td></tr></table></figure>
 <h3 id="配置~/-ssh/config文件">配置~/.ssh/config文件</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="id">#gitlab</span> user</span><br><span class="line">Host gitlab<span class="class">.mo2zie</span><span class="class">.com</span>  <span class="comment">//别名</span></span><br><span class="line">HostName gitlab<span class="class">.mo2zie</span><span class="class">.com</span> <span class="comment">//主机地址</span></span><br><span class="line">User git</span><br><span class="line">IdentityFile /home/mo2zie/.ssh/id_rsa</span><br><span class="line"></span><br><span class="line"><span class="id">#github</span> user</span><br><span class="line">Host github<span class="class">.com</span></span><br><span class="line">HostName github<span class="class">.com</span></span><br><span class="line">User git</span><br><span class="line">IdentityFile /home/mo2zie/.ssh/id_rsa_github</span><br></pre></td></tr></table></figure>
 <p>假如是对同一主机设置的不同key的话要把配置中Host（别名）区分出来，连接时通过不同的host来使用不同的key。</p>
 <h3 id="git_多用户">git 多用户</h3><p>git config –global 会生成全局配置，可在不同目录中 git config –local 来覆盖达到不同目录使用不同用户的目的</p>
