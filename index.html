@@ -49,6 +49,44 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-01-07T13:18:32.000Z"><a href="/2016/01/07/2015-summary/">2016-01-07</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/01/07/2015-summary/">2015 年终总结</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>工作有一段时间了，总想着写点什么，但拖来拖去都到了新的一年也还没写成，正好今天没什么事想做不如就来唠叨一下这一年吧。似乎第一次这么正经的写年终总结，可以预见的是会写的乱七八槽，也就想到哪儿写到哪儿吧。</p>
+<p>由于前年就早早的敲定了校招所以年初就如愿的进京实习了，一个人租房上下班，生活倒也简单，中间有些开心不开心的事大多也记不清了，总感觉那两个月过的有些浑浑噩噩，工作上部门在转型目标也不明确，手头的事儿也没什么挑战，总感觉身上有劲儿使不出来，事实上这几年也都一直在找一个能让自己全力以赴的事情，算是一个长远的目标吧。其实那时候就有过想走的想法，不过当时也不知道如果走了再找什么样的工作，也没拿定主意。后来到了5月底就跟几个老同学跑去宁夏玩儿了，那一周玩的特别开心，尤其是在沙漠跟大家喝着x5聊着天的晚上，后来一时兴起我就跑去外面裸奔了，现在想起来倒也没什么后悔的，趁年轻该放纵就放纵一把嘛，虽然说好的出了沙漠大家就把这件事忘掉，但是大家默契的都把我出卖了。从宁夏回来，就是整理论文毕业了，喝酒，撸串，喝酒，撸串大概就是这样过完的那一个月，感觉那时候真能喝，现在喝一瓶啤酒我都难受。记得，从石家庄走的的那天，阿伟阿芮去车站送我，虽然一路上没说一句话，大家心里都懂，我们三个真是结结实实的一起住了四年，在入站口草草合了一个影我就进站了，候车的时候阿芮发了一条短信给我，当时眼泪就下来了，说到底我还是一个感性并且有些矫情的人。
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2016/01/07/2015-summary/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-05T04:35:42.000Z"><a href="/2015/09/05/ssh-key/">2015-09-05</a></time>
       
       
@@ -61,16 +99,15 @@
       
         <p>有时我们需要同时在github, gitlab等多个代码托管平台工作又不想使用相同的ssh key，那么就需要根据不同的host来配置。</p>
 <h3 id="create_key:_id_rsa_moz">create key: id_rsa_moz</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~/.ssh</span><br><span class="line">$ ssh-keygen -t rsa -C <span class="string">"pisc@mo2zie.me"</span></span><br></pre></td></tr></table></figure>
-<p>在输入文件名称时注意与已有的区分</p>
-<h3 id="添加到ssh_agent让ssh识别新的私钥">添加到ssh agent让ssh识别新的私钥</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-add ~/.ssh/id_rsa_github</span><br></pre></td></tr></table></figure>
-<h3 id="配置~/-ssh/config文件">配置~/.ssh/config文件</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="id">#gitlab</span> user</span><br><span class="line">Host gitlab<span class="class">.mo2zie</span><span class="class">.com</span>  <span class="comment">//别名</span></span><br><span class="line">HostName gitlab<span class="class">.mo2zie</span><span class="class">.com</span> <span class="comment">//主机地址</span></span><br><span class="line">User git</span><br><span class="line">IdentityFile /home/mo2zie/.ssh/id_rsa</span><br><span class="line"></span><br><span class="line"><span class="id">#github</span> user</span><br><span class="line">Host github<span class="class">.com</span></span><br><span class="line">HostName github<span class="class">.com</span></span><br><span class="line">User git</span><br><span class="line">IdentityFile /home/mo2zie/.ssh/id_rsa_github</span><br></pre></td></tr></table></figure>
-<p>假如是对同一主机设置的不同key的话要把配置中Host（别名）区分出来，连接时通过不同的host来使用不同的key。</p>
-<h3 id="git_多用户">git 多用户</h3><p>git config –global 会生成全局配置，可在不同目录中 git config –local 来覆盖达到不同目录使用不同用户的目的</p>
-
+<p>在输入文件名称时注意与已有的区分<br>
       
     </div>
     <footer>
       
+        
+          <div class="alignleft">
+            <a href="/2015/09/05/ssh-key/#more" class="more-link">Read More</a>
+          </div>
         
         
       
@@ -106,6 +143,8 @@
   
     <li><a href="/tags/备忘/">备忘</a><small>1</small></li>
   
+    <li><a href="/tags/总结/">总结</a><small>1</small></li>
+  
   </ul>
 </div>
 
@@ -114,7 +153,7 @@
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2015 mo2zie | power by Hexo
+  &copy; 2016 mo2zie | power by Hexo
   
 </div>
 <div class="clearfix"></div></footer>
