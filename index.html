@@ -49,6 +49,44 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-02-24T04:48:09.000Z"><a href="/2016/02/24/tcpdump-tips/">2016-02-24</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/02/24/tcpdump-tips/">Use TCPDUMP To Monitor HTTP Traffic</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Some days ago, i use tcpdump to analysis an connect problem on my Mac. i get http header by use the -vvv option. So today, when i want to do that again on the machine which is running online. It does’nt work. What’s wrong? After searching on google for some minutes, i found that was caused by the version difference. On my Mac the version of tcpdump is 4.7.3, but 4.6.2 of the online machine (it seems only work on 4.7.x). So here comes the quesion, how can i get the http header in 4.6.x or earlier?</p>
+<p>As we all know, http use tcp as its Transport Layer protocel, so we can find everything in the tcp package. In the man page of tcpdump, i found -A can print those message. So we can execute the bellow command to monitor http traffic including request and response header and message body.<br>
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2016/02/24/tcpdump-tips/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-01-07T13:18:32.000Z"><a href="/2016/01/07/2015-summary/">2016-01-07</a></time>
       
       
@@ -141,7 +179,9 @@
   <h3 class="title">Tags</h3>
   <ul class="entry">
   
-    <li><a href="/tags/备忘/">备忘</a><small>1</small></li>
+    <li><a href="/tags/备忘/">备忘</a><small>2</small></li>
+  
+    <li><a href="/tags/工具/">工具</a><small>1</small></li>
   
     <li><a href="/tags/总结/">总结</a><small>1</small></li>
   

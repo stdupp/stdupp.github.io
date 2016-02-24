@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Use TCPDUMP To Monitor HTTP Traffic | Mo2zie&#39;s Blog</title>
+  <meta name="author" content="mo2zie | power by Hexo">
+  
+  <meta name="description" content="Some days ago, i use tcpdump to analysis an connect problem on my Mac. i get http header by use the -vvv option. So today, when i want to do that again on the machine which is running online. It does’nt work. What’s wrong? After searching on google for some minutes, i found that was caused by the version difference. On my Mac the version of tcpdump is 4.7.3, but 4.6.2 of the online machine (it seems only work on 4.7.x). So here comes the quesion, how can i get the http header in 4.6.x or earlier?
+As we all know, http use tcp as its Transport Layer protocel, so we can find everything in the tcp package. In the man page of tcpdump, i found -A can print those message. So we can execute the bellow command to monitor http traffic including request and response header and message body.">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Use TCPDUMP To Monitor HTTP Traffic"/>
+  <meta property="og:site_name" content="Mo2zie&#39;s Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Mo2zie&#39;s Blog" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Mo2zie&#39;s Blog</a></h1>
+  <h2><a href="/">安静一点..</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-02-24T04:48:09.000Z"><a href="/2016/02/24/tcpdump-tips/">2016-02-24</a></time>
+      
+      
+  
+    <h1 class="title">Use TCPDUMP To Monitor HTTP Traffic</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Some days ago, i use tcpdump to analysis an connect problem on my Mac. i get http header by use the -vvv option. So today, when i want to do that again on the machine which is running online. It does’nt work. What’s wrong? After searching on google for some minutes, i found that was caused by the version difference. On my Mac the version of tcpdump is 4.7.3, but 4.6.2 of the online machine (it seems only work on 4.7.x). So here comes the quesion, how can i get the http header in 4.6.x or earlier?</p>
+<p>As we all know, http use tcp as its Transport Layer protocel, so we can find everything in the tcp package. In the man page of tcpdump, i found -A can print those message. So we can execute the bellow command to monitor http traffic including request and response header and message body.<br><a id="more"></a></p>
+<figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">tcpdump</span> -<span class="type">A</span> tcp <span class="foreign"><span class="keyword">port</span> 80</span></span><br></pre></td></tr></table></figure>
+<p>After run this i get so many packages, including SIN and FIN and ACK-only. How to avoid this?</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump -A 'tcp port <span class="number">80</span> and (((ip<span class="string">[2:2]</span> - ((ip<span class="string">[0]</span>&amp;0xf)&lt;&lt;<span class="number">2</span>)) - ((tcp<span class="string">[12]</span>&amp;0xf0)&gt;&gt;<span class="number">2</span>)) != <span class="number">0</span>)'</span><br></pre></td></tr></table></figure>
+<p>This only print package that contain data. Because of the length of response message body, there will catch many response data package. If i only want two package, one contain the requset header, the other one contail the response header, what should i do? This will be help.</p>
+<pre><code>tcpdump -A 'tcp port <span class="number">80</span> and <span class="params">(tcp[<span class="params">(<span class="params">(tcp[<span class="number">12</span>:<span class="number">1</span>] &amp; <span class="number">0</span>xf0)</span> &gt;&gt; <span class="number">2</span>)</span>:<span class="number">4</span>] = <span class="number">0</span>x47455420 or tcp[<span class="params">(<span class="params">(tcp[<span class="number">12</span>:<span class="number">1</span>] &amp; <span class="number">0</span>xf0)</span> &gt;&gt; <span class="number">2</span>)</span>:<span class="number">4</span>] = <span class="number">0</span>x48545450 or tcp[<span class="params">(<span class="params">(tcp[<span class="number">12</span>:<span class="number">1</span>] &amp; <span class="number">0</span>xf0)</span> &gt;&gt; <span class="number">2</span>)</span>:<span class="number">4</span>] = <span class="number">0</span>x504f5354)</span>'
+</code></pre><p>0x47455420 -&gt; ‘GET ‘, 0x48545450 -&gt; ‘HTTP’, 0x504f5354 -&gt; ‘POST’</p>
+<p>What dose ‘tcp[((tcp[12:1] &amp; 0xf0) &gt;&gt; 2):4]’ mean? ‘((tcp[12:1] &amp; 0xf0) &gt;&gt; 2)’ was the offset of tcp data field. ‘:4’ will pick first four bytes. Compare to the str on the right side of ‘=’, we can judge what the package is.</p>
+<p>This is my first time to write technical article in English, there must be many mistakes. Feel free to contact me for comments, suggestions or for reporting mistakes :)</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/备忘/">备忘</a>, <a href="/tags/工具/">工具</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="q" value="site:mo2zie.me">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">Tags</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/备忘/">备忘</a><small>2</small></li>
+  
+    <li><a href="/tags/工具/">工具</a><small>1</small></li>
+  
+    <li><a href="/tags/总结/">总结</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 mo2zie | power by Hexo
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>
