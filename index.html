@@ -49,6 +49,43 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-03-02T16:10:06.000Z"><a href="/2016/03/03/nginx-lua-module-bug/">2016-03-03</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/03/03/nginx-lua-module-bug/">lua-nginx-module 一处bug分析与修复</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h3 id="问题概述">问题概述</h3><p>在一次处理反馈问题过程中发现lua-nginx-module的balancer语法在keepalive场景下存在bug，当nginx通过已经建立的回源连接发送请求给原服务器时，连接被上游服务器主动关闭并保证再次发送这个请求时同样会被关闭（触发waf规则或者其他意外关闭），会造成nginx不断创建新的连接。</p>
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2016/03/03/nginx-lua-module-bug/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-02-24T04:48:09.000Z"><a href="/2016/02/24/tcpdump-tips/">2016-02-24</a></time>
       
       
@@ -178,6 +215,10 @@
 <div class="widget tag">
   <h3 class="title">Tags</h3>
   <ul class="entry">
+  
+    <li><a href="/tags/nginx/">nginx</a><small>1</small></li>
+  
+    <li><a href="/tags/openresty/">openresty</a><small>1</small></li>
   
     <li><a href="/tags/备忘/">备忘</a><small>2</small></li>
   
