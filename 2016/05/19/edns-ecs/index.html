@@ -1,0 +1,168 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>EDNS &amp; edns-client-subnet 笔记整理 | Mo2zie&#39;s Blog</title>
+  <meta name="author" content="mo2zie | power by Hexo">
+  
+  <meta name="description" content="前言1.EDNS(Extension mechanisms for DNS)是DNS的一种扩展机制，旨在提供更多的消息格式和更丰富的消息内容，同时可以突破传统DNS报文512字节的限制。在rfc2671中首次提出，也称为EDNS0。
+2.edns-client-subnet 是google提出的一种DNS扩展协议，以EDNS为基础，允许DNS resovler传递用户的ip地址给authoritative DNS。
+相关报文格式dns 报文包含header、Question和 RRs三部分，header中包含了dns query的标志、各类记录的个数，Question段为查询问题，所有RRs的格式都是相同的:">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="EDNS &amp; edns-client-subnet 笔记整理"/>
+  <meta property="og:site_name" content="Mo2zie&#39;s Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Mo2zie&#39;s Blog" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Mo2zie&#39;s Blog</a></h1>
+  <h2><a href="/">安静一点..</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-05-19T07:48:27.000Z"><a href="/2016/05/19/edns-ecs/">2016-05-19</a></time>
+      
+      
+  
+    <h1 class="title">EDNS &amp; edns-client-subnet 笔记整理</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h3 id="前言">前言</h3><p>1.EDNS(Extension mechanisms for DNS)是DNS的一种扩展机制，旨在提供更多的消息格式和更丰富的消息内容，同时可以突破传统DNS报文512字节的限制。在<a href="https://tools.ietf.org/html/rfc2671" target="_blank" rel="external">rfc2671</a>中首次提出，也称为EDNS0。</p>
+<p>2.edns-client-subnet 是google提出的一种<a href="http://tools.ietf.org/html/draft-vandergaast-edns-client-subnet-01" target="_blank" rel="external">DNS扩展协议</a>，以EDNS为基础，允许DNS resovler传递用户的ip地址给authoritative DNS。</p>
+<h3 id="相关报文格式">相关报文格式</h3><p>dns 报文包含header、Question和 RRs三部分，header中包含了dns query的标志、各类记录的个数，Question段为查询问题，所有RRs的格式都是相同的:<br><a id="more"></a><br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">                                1  1  1  1  1  1</span></span><br><span class="line"><span class="header">  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5</span><br><span class="line">+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+</span></span><br><span class="line">|                                               |</span><br><span class="line">/                                               /</span><br><span class="line">/                      NAME                     /</span><br><span class="line"><span class="header">|                                               |</span><br><span class="line">+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+</span></span><br><span class="line"><span class="header">|                      TYPE                     |</span><br><span class="line">+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+</span></span><br><span class="line"><span class="header">|                     CLASS                     |</span><br><span class="line">+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+</span></span><br><span class="line">|                      TTL                      |</span><br><span class="line"><span class="header">|                                               |</span><br><span class="line">+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+</span></span><br><span class="line"><span class="header">|                   RDLENGTH                    |</span><br><span class="line">+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+</span></span><br><span class="line">/                     RDATA                     /</span><br><span class="line"><span class="header">/                                               /</span><br><span class="line">+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+</span></span><br><span class="line"></span><br><span class="line">NAME: RDATA对应的域名</span><br><span class="line">TYPE: A, CNAME..</span><br><span class="line">CLASS: 资源类，通常为1 即internet</span><br><span class="line">TTL: 两子节，有效秒数</span><br><span class="line">RDLENGTH: RDATA长度，单位字节</span><br></pre></td></tr></table></figure></p>
+<p>EDNS 引入了一种新的伪资源记录OPT，存储在dns的报文的Addtional data区，OPT pseudo-RR不能被转发、cache或存储在zone文件中。它的构成如下:<br><figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Field Name   Field Type     Description</span><br><span class="line">------------------------------------------------------</span><br><span class="line">NAME         domain name    empty (root domain)</span><br><span class="line">TYPE         u_int16_t      OPT</span><br><span class="line">CLASS        u_int16_t      sender's UDP payload size</span><br><span class="line">TTL          u_int32_t      extended RCODE and flags</span><br><span class="line">RDLEN        u_int16_t      describes RDATA</span><br><span class="line">RDATA        octet stream   &#123;attribute,value&#125; pairs  （可变长）</span><br><span class="line">------------------------------------------------------ </span><br><span class="line">NAME: 0x00</span><br><span class="line">TYPE: OPT的类型编号0x29 (有IANA分配) </span><br><span class="line">CLASS: 整个udp包的大小</span><br><span class="line">RDLEN: RDATA长度，单位字节</span><br><span class="line"></span><br><span class="line">tips:</span><br><span class="line">   (<span class="keyword">A</span>, <span class="keyword">NS</span>, MD, MF, <span class="keyword">CNAME</span>, <span class="keyword">SOA</span>, MB, MG, MR, NULL, WKS, <span class="keyword">PTR</span>, HINFO, MINFO, <span class="keyword">MX</span>, <span class="keyword">TXT</span>, <span class="keyword">RP</span>, <span class="keyword">AFSDB</span>) = range(1, 19)</span><br><span class="line">   <span class="keyword">AAAA</span> = 28</span><br><span class="line">   <span class="keyword">SRV</span> = 33</span><br><span class="line">   <span class="keyword">NAPTR</span> = 35</span><br><span class="line">   A6 = 38</span><br><span class="line">   <span class="keyword">DNAME</span> = 39</span><br><span class="line">   SPF = 99</span><br><span class="line">   OPT = 41</span><br></pre></td></tr></table></figure></p>
+<p>其中TTL的格式如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">              +<span class="number">0</span> (MSB)                            +<span class="number">1</span> (LSB)</span><br><span class="line">   +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+</span><br><span class="line"><span class="number">0</span>: |         EXTENDED-RCODE        |            VERSION            |</span><br><span class="line">   +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+</span><br><span class="line"><span class="number">2</span>: |                               Z                               |</span><br><span class="line">   +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+</span><br><span class="line">   EXTENDED-RCODE: 扩展dns header中的RCODE(<span class="number">4</span>bit)，共<span class="number">12</span>bit</span><br><span class="line">   VERSION: EDNS version</span><br><span class="line">   Z: 默认又请求发起者设为<span class="number">0</span>，接收端不处理</span><br></pre></td></tr></table></figure></p>
+<p>接下来是最重要RDATA部分：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">              +<span class="number">0</span> (MSB)                            +<span class="number">1</span> (LSB)</span><br><span class="line">   +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+</span><br><span class="line"><span class="number">0</span>: |                          OPTION-CODE                          |</span><br><span class="line">   +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+</span><br><span class="line"><span class="number">2</span>: |                         OPTION-LENGTH                         |</span><br><span class="line">   +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+</span><br><span class="line"><span class="number">4</span>: |                                                               |</span><br><span class="line">   /                          OPTION-DATA                          /</span><br><span class="line">   /                                                               /</span><br><span class="line">   +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+</span><br><span class="line">   </span><br><span class="line">   OPTION-CODE: IANA 分配，NSID: <span class="number">0x0003</span>, edns-client-subnet: <span class="number">0x0008</span></span><br><span class="line">   OPTION-LENGTH: OPTION-DATA长度字节</span><br></pre></td></tr></table></figure></p>
+<p>ecs 相当于扩展了 edns 的RDATA，它的格式如下:<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">             +0 (MSB)                            +1 (LSB)</span><br><span class="line">  +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+</span><br><span class="line">0: |<span class="string">                          OPTION-CODE                          </span>|</span><br><span class="line">   +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+</span><br><span class="line">2: |<span class="string">                         OPTION-LENGTH                         </span>|</span><br><span class="line">   +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+</span><br><span class="line">4: |<span class="string">                            FAMILY                             </span>|</span><br><span class="line">   +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+</span><br><span class="line">6: |<span class="string">          SOURCE NETMASK       </span>|<span class="string">        SCOPE NETMASK          </span>|</span><br><span class="line">   +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+</span><br><span class="line">7: |<span class="string">                           ADDRESS...                          /</span><br><span class="line">   +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+</span><br><span class="line">   </span><br><span class="line"> OPTION-CODE, OPTION-LENGTH 与上面相同</span><br><span class="line"> FAMILY: IPV4(1) OR IPV6(2)</span><br><span class="line"> SOURCE NETMASK: 掩码位数(bit 位)，应答中这个字段被原样返回</span><br><span class="line"> SCOPE NETMASk: 期望的位数，或者说能提供更优查询所需的位数，请求报文中必须为0</span><br><span class="line"> ADDRESS: 用户ip地址，4字节或更少</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="几个要点">几个要点</h3><ol>
+<li>stub resolver 如果把source mask设为0，recursive resolver不应把客户端ip加到请求中。</li>
+<li>authoritative server 假如不支持ecs，则在应答中不得含有ecs选项。如果使用了ecs 选项，则必须在应答中包含相应选项已证明自己使用了相关信息。</li>
+<li>假如请求中不包含ecs选项，应答中也不能包含。</li>
+<li>请求、应答报文中的FAMILY SOURCE NETMASK ADDRESS必须相同</li>
+<li>假如 authoritative server支持ecs，而由于其它原因没有使用到请求中的ecs选项(优化回复暂时不可用或者域名不存在)，则需要把SCOPE NETMASK置0，表示自己并没有使用相关选项。</li>
+<li>对于FAMILY、ADDRESS、SOURCE NETMASK 确定的查询无优化的应答，authoritative server 仍然需要返回它认为最好的结果（使用来源ip来查询），同时将SCOPE NETMASK 置为与SOUCE NETMASK 相同。</li>
+<li>SCOPE NETMASK &gt; SOURCE NETMASK，掩码位数不足以提供更优查询，需要SCOPE NETMASK位数的掩码，此类应答的缓存只会给SOURCE MASK 为0 或者无法提供长于SOURCE MASK address的请求</li>
+<li>SCOPE NETMASK &lt;= SOURCE NETMASK, 提供了多于必要的位数，缓存会给SCOPE NETMASK 确认下的所有client</li>
+</ol>
+<h3 id="参考文档">参考文档</h3><ul>
+<li><a href="https://tools.ietf.org/html/rfc1035" target="_blank" rel="external">rfc 1035</a>, <a href="https://tools.ietf.org/html/rfc2671" target="_blank" rel="external">rfc 2671</a>, <a href="http://tools.ietf.org/html/draft-vandergaast-edns-client-subnet-01" target="_blank" rel="external">draft-vandergaast-edns-client-subnet-01</a></li>
+<li><a href="http://www.cnblogs.com/cobbliu/p/3188632.html" target="_blank" rel="external">http://www.cnblogs.com/cobbliu/p/3188632.html</a></li>
+<li><a href="http://noops.me/?p=653" target="_blank" rel="external">http://noops.me/?p=653</a></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/dns/">dns</a>, <a href="/tags/protocol/">protocol</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="q" value="site:mo2zie.me">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">Tags</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/dns/">dns</a><small>1</small></li>
+  
+    <li><a href="/tags/nginx/">nginx</a><small>1</small></li>
+  
+    <li><a href="/tags/openresty/">openresty</a><small>1</small></li>
+  
+    <li><a href="/tags/protocol/">protocol</a><small>1</small></li>
+  
+    <li><a href="/tags/备忘/">备忘</a><small>2</small></li>
+  
+    <li><a href="/tags/工具/">工具</a><small>1</small></li>
+  
+    <li><a href="/tags/总结/">总结</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 mo2zie | power by Hexo
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>
